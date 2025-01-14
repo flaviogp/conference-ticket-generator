@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{html,js, jsx, ts, tsx}"],
+  content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -10,9 +10,9 @@ module.exports = {
         "neutral-500": "hsl(245, 15%, 58%)",
         "neutral-700": "hsl(245, 19%, 35%)",
         "neutral-900": "hsl(248, 70%, 10%)",
-        "Orange-500": "hsl(7, 88%, 67%)",
-        "Orange-700": "hsl(7, 71%, 60%)",
-        "Gradient-text": "hsl(7, 86%, 67%) to hsl(0, 0%, 100%)",
+        "orange-500": "hsl(7, 88%, 67%)",
+        "orange-700": "hsl(7, 71%, 60%)",
+        "gradient-text": "hsl(7, 86%, 67%) to hsl(0, 0%, 100%)",
       }
     },
   },
