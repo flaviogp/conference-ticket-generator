@@ -19,10 +19,7 @@ const Form = () => {
     onDrop: (e: React.DragEvent) => {
       e.preventDefault();
       const file = Array.from(e.dataTransfer.files);
-      console.log(file);
       if (file.length !== 1) throw new Error("Insira apenas uma imagem");
-      console.log("ok 1 img");
-
       const { name, size } = file[0];
       const reader = new FileReader();
       reader.readAsDataURL(file[0]);
@@ -35,21 +32,64 @@ const Form = () => {
     },
   };
 
+  const handleRemoveUserImage = () => setUserImage(null);
+
   return (
     <form className="flex w-full flex-col gap-4 p-6">
       <div className="flex flex-col gap-2">
         Upload Avatar
-        <label
-          htmlFor="avatar"
-          className={`${inputStyles} flex cursor-pointer flex-col items-center gap-4 border-dashed py-5`}
-          {...dragEvents}
-        >
-          <input type="file" name="avatar" id="avatar" className="h-0 w-0" />
-          <div className="w-max rounded-xl border border-neutral-500 bg-neutral-500/30 p-3 shadow-md">
-            <img src={UploadIcon} alt="upload icon" className="h-8 w-8" />
+        {!userImage ? (
+          <div className={`${inputStyles} border-dashed`} {...dragEvents}>
+            <label
+              htmlFor="avatar"
+              className="flex cursor-pointer flex-col items-center gap-4 py-5"
+            >
+              <input
+                type="file"
+                name="avatar"
+                id="avatar"
+                className="h-0 w-0"
+              />
+              <div className="w-max rounded-xl border border-neutral-500 bg-neutral-500/30 p-3 shadow-md">
+                <img src={UploadIcon} alt="upload icon" className="h-8 w-8" />
+              </div>
+              <span>Drag and drop or click to upload</span>
+            </label>
           </div>
-          <span>Drag and drop or click to upload</span>
-        </label>
+        ) : (
+          <div className={`${inputStyles} border-dashed`} {...dragEvents}>
+            <div className="flex cursor-pointer flex-col items-center gap-4 py-5">
+              <div className="max-h-[100px] max-w-[100px] overflow-hidden rounded-xl border border-neutral-500 bg-neutral-500/30 shadow-md">
+                <img
+                  src={userImage.preview}
+                  alt={userImage.name}
+                  className="h-full w-full"
+                />
+              </div>
+              <div className="flex w-full justify-center gap-4">
+                <button
+                  onClick={handleRemoveUserImage}
+                  className="rounded-xl bg-neutral-500/30 px-4 py-2 text-neutral-0 [&>*]:hover:underline"
+                >
+                  <span>Remove Image</span>
+                </button>
+                <label
+                  htmlFor="avatar"
+                  className="rounded-xl bg-neutral-500/30 px-4 py-2 text-neutral-0 [&>*]:hover:underline"
+                >
+                  <span>Change Image</span>
+
+                  <input
+                    type="file"
+                    name="avatar"
+                    id="avatar"
+                    className="h-0 w-0"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="name">Full Name</label>
