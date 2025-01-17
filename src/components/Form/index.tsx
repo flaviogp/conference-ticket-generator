@@ -1,5 +1,6 @@
 import { useState } from "react";
 import UploadIcon from "../../assets/images/icon-upload.svg";
+import { FormErrorsType, FormFieldsType } from "../../App";
 
 type UserImageType = {
   name: string;
@@ -7,10 +8,30 @@ type UserImageType = {
   preview: string;
 };
 
-const Form = () => {
-  const [userImage, setUserImage] = useState<UserImageType | null>(null);
+interface FormProps {
+  validForm: () => void;
+  setFormFields: (formField: FormFieldsType) => void;
+  formErrors: FormErrorsType[];
+}
 
-  const inputStyles = `rounded-xl border border-neutral-500 bg-neutral-300/10 text-nneutral-0`;
+const Form = ({ validForm, setFormFields, formErrors }: FormProps) => {
+  const [userImage, setUserImage] = useState<UserImageType | null>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [gitHubUser, setGitHubUser] = useState("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormFields({
+      userName: name,
+      avatar: userImage ? userImage.preview : "",
+      email,
+      gitHubUserName: gitHubUser,
+    });
+    validForm();
+  };
+
+  const inputStyles = `rounded-xl border border-neutral-500 bg-neutral-300/10 hover:bg-neutral-300/20 text-nneutral-0`;
 
   const dragEvents = {
     onDragEnter: (e: React.DragEvent) => e.preventDefault(),
@@ -34,8 +55,23 @@ const Form = () => {
 
   const handleRemoveUserImage = () => setUserImage(null);
 
+  const errorMessage = (type: string) => {
+    return formErrors.map((err) => {
+      if (err.type === type) {
+        return (
+          <p key={err.error + err.type} className="text-red-700">
+            {err.error}
+          </p>
+        );
+      }
+    });
+  };
+
   return (
-    <form className="flex w-full flex-col gap-4 p-6">
+    <form
+      className="flex w-full flex-col gap-4 p-6"
+      onSubmit={(e) => handleSubmit(e)}
+    >
       <div className="flex flex-col gap-2">
         Upload Avatar
         {!userImage ? (
@@ -55,6 +91,7 @@ const Form = () => {
               </div>
               <span>Drag and drop or click to upload</span>
             </label>
+            {errorMessage("avatar")}
           </div>
         ) : (
           <div className={`${inputStyles} border-dashed`} {...dragEvents}>
@@ -98,8 +135,10 @@ const Form = () => {
           type="text"
           name="name"
           id="name"
+          onChange={(e) => setName(e.currentTarget.value)}
         />
       </div>
+      {errorMessage("name")}
       <div className="flex flex-col gap-2">
         <label htmlFor="email">Email Address</label>
         <input
@@ -107,8 +146,10 @@ const Form = () => {
           type="email"
           name="email"
           id="email"
+          onChange={(e) => setEmail(e.currentTarget.value)}
         />
       </div>
+      {errorMessage("email")}
       <div className="flex flex-col gap-2">
         <label htmlFor="git-user">GitHub Username</label>
         <input
@@ -116,8 +157,10 @@ const Form = () => {
           type="text"
           name="git-user"
           id="git-user"
+          onChange={(e) => setGitHubUser(e.currentTarget.value)}
         />
       </div>
+      {errorMessage("gitUser")}
 
       <button
         type="submit"
