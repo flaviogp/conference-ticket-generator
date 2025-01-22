@@ -22,7 +22,7 @@ const TicketPreview = ({ formFields }: TicketPreviewProps) => {
         <div className="max-h-16 w-auto">
           <img src={formFields?.avatar} alt="user" className="h-full w-full" />
         </div>
-        <div className="max-h-16">
+        <div className="max-h-16 w-[350px]">
           <p className="text-3xl font-bold">{formFields?.userName}</p>
           <div className="flex gap-2">
             <img src={GitIcon} alt="github icon" />

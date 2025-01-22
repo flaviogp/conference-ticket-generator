@@ -8,7 +8,7 @@ function App() {
   const [formIsValid, setFormIsValid] = useState(false);
   const [formFields, setFormFields] = useState<FormFieldsType>();
   return (
-    <div className="flex flex-col items-center text-neutral-0">
+    <div className="flex max-w-[600px] flex-col items-center text-neutral-0">
       <Header />
       {!formIsValid ? (
         <div className="px-5">
@@ -21,7 +21,7 @@ function App() {
           <Form setFormIsValid={setFormIsValid} setFormFields={setFormFields} />
         </div>
       ) : (
-        <div className="px-5">
+        <div className="flex flex-col items-center gap-6 px-5">
           <h1 className="mb-4 text-center text-4xl font-bold">
             Congrats,{" "}
             <span className="text-gradient-text">{formFields?.userName}</span>!

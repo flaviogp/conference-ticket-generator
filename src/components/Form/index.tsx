@@ -1,7 +1,7 @@
 import { useState } from "react";
 import UploadIcon from "../../assets/images/icon-upload.svg";
 import { useForm } from "react-hook-form";
-import { FormErrorsType, FormFieldsType } from "../../types";
+import { FormFieldsType } from "../../types";
 
 type UserImageType = {
   name: string;
