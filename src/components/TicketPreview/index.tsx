@@ -1,18 +1,13 @@
 import PaternTicket from "../../assets/images/pattern-ticket.svg";
 import Logo from "../../assets/images/logo-mark.svg";
 import GitIcon from "../../assets/images/icon-github.svg";
+import { FormFieldsType } from "../../types";
 
 interface TicketPreviewProps {
-  userName: string;
-  userImage: string;
-  userGitHub: string;
+  formFields?: FormFieldsType;
 }
 
-const TicketPreview = ({
-  userName,
-  userImage,
-  userGitHub,
-}: TicketPreviewProps) => {
+const TicketPreview = ({ formFields }: TicketPreviewProps) => {
   return (
     <div className="relative mt-20 flex h-[240px] max-w-[600px] flex-col justify-between p-5">
       <img src={PaternTicket} alt="Ticket" className="absolute left-0 top-0" />
@@ -25,13 +20,13 @@ const TicketPreview = ({
       </div>
       <div className="flex gap-4">
         <div className="max-h-16 w-auto">
-          <img src={userImage} alt="user" className="h-full w-full" />
+          <img src={formFields?.avatar} alt="user" className="h-full w-full" />
         </div>
         <div className="max-h-16">
-          <p className="text-3xl font-bold">{userName}</p>
+          <p className="text-3xl font-bold">{formFields?.userName}</p>
           <div className="flex gap-2">
             <img src={GitIcon} alt="github icon" />
-            <span>{userGitHub}</span>
+            <span>{formFields?.gitHubUserName}</span>
           </div>
         </div>
       </div>

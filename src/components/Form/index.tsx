@@ -1,6 +1,7 @@
 import { useState } from "react";
 import UploadIcon from "../../assets/images/icon-upload.svg";
-import { FormErrorsType, FormFieldsType } from "../../App";
+import { useForm } from "react-hook-form";
+import { FormErrorsType, FormFieldsType } from "../../types";
 
 type UserImageType = {
   name: string;
@@ -9,27 +10,26 @@ type UserImageType = {
 };
 
 interface FormProps {
-  validForm: () => void;
-  setFormFields: (formField: FormFieldsType) => void;
-  formErrors: FormErrorsType[];
+  setFormIsValid: (value: boolean) => void;
+  setFormFields: (fields: FormFieldsType) => void;
 }
 
-const Form = ({ validForm, setFormFields, formErrors }: FormProps) => {
-  const [userImage, setUserImage] = useState<UserImageType | null>(null);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [gitHubUser, setGitHubUser] = useState("");
+interface ErrorMessageElementProps {
+  message: string;
+}
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setFormFields({
-      userName: name,
-      avatar: userImage ? userImage.preview : "",
-      email,
-      gitHubUserName: gitHubUser,
-    });
-    validForm();
-  };
+const ErrorMessageElement = ({ message }: ErrorMessageElementProps) => {
+  return <p className="text-red-600">{message}</p>;
+};
+
+const Form = ({ setFormIsValid, setFormFields }: FormProps) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormFieldsType>();
+
+  const [userImage, setUserImage] = useState<UserImageType | null>(null);
 
   const inputStyles = `rounded-xl border border-neutral-500 bg-neutral-300/10 hover:bg-neutral-300/20 text-nneutral-0`;
 
@@ -53,24 +53,75 @@ const Form = ({ validForm, setFormFields, formErrors }: FormProps) => {
     },
   };
 
+  console.log(errors);
+  const onSubmit = (data: FormFieldsType) => {
+    setFormIsValid(true);
+    setFormFields({ ...data, avatar: userImage ? userImage.preview : "" });
+    console.log(errors);
+    console.log(data);
+  };
+
   const handleRemoveUserImage = () => setUserImage(null);
 
   const errorMessage = (type: string) => {
-    return formErrors.map((err) => {
-      if (err.type === type) {
-        return (
-          <p key={err.error + err.type} className="text-red-700">
-            {err.error}
-          </p>
-        );
-      }
-    });
+    switch (type) {
+      case "userName":
+        if (errors.userName?.type === "required") {
+          return <ErrorMessageElement message="User name is required" />;
+        }
+
+        if (errors.userName?.type === "minLength") {
+          return (
+            <ErrorMessageElement message="User name must have at least 3 characters" />
+          );
+        }
+        break;
+      case "email":
+        if (errors.email?.type === "required") {
+          return <ErrorMessageElement message="Email is required" />;
+        }
+        if (errors.email?.type === "pattern") {
+          return <ErrorMessageElement message="Please enter a valid email!" />;
+        }
+        break;
+      case "gitHubUserName":
+        if (errors.gitHubUserName?.type === "required") {
+          return <ErrorMessageElement message="GitHub username is required" />;
+        }
+        if (errors.gitHubUserName?.type === "pattern") {
+          return (
+            <ErrorMessageElement message="Please enter a valid GitHub username ex: '@username'!" />
+          );
+        }
+        break;
+    }
+
+    // return <ErrorMessageElement message="se" />;
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    if (!e.currentTarget.files) return;
+    const file = e.currentTarget.files[0];
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img: UserImageType = {
+        name: file.name.trim(),
+        size: file.size,
+        preview: String(reader.result),
+      };
+      setUserImage(img);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   return (
     <form
       className="flex w-full flex-col gap-4 p-6"
-      onSubmit={(e) => handleSubmit(e)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="flex flex-col gap-2">
         Upload Avatar
@@ -82,16 +133,19 @@ const Form = ({ validForm, setFormFields, formErrors }: FormProps) => {
             >
               <input
                 type="file"
-                name="avatar"
                 id="avatar"
                 className="h-0 w-0"
+                {...register("avatar", {
+                  required: true,
+                  onChange: (e) => handleFileChange(e),
+                })}
               />
               <div className="w-max rounded-xl border border-neutral-500 bg-neutral-500/30 p-3 shadow-md">
                 <img src={UploadIcon} alt="upload icon" className="h-8 w-8" />
               </div>
               <span>Drag and drop or click to upload</span>
             </label>
-            {errorMessage("avatar")}
+            {/* {errorMessage("avatar")} */}
           </div>
         ) : (
           <div className={`${inputStyles} border-dashed`} {...dragEvents}>
@@ -121,6 +175,7 @@ const Form = ({ validForm, setFormFields, formErrors }: FormProps) => {
                     name="avatar"
                     id="avatar"
                     className="h-0 w-0"
+                    onChange={(e) => handleFileChange(e)}
                   />
                 </label>
               </div>
@@ -133,20 +188,21 @@ const Form = ({ validForm, setFormFields, formErrors }: FormProps) => {
         <input
           className={`${inputStyles} p-3 text-lg`}
           type="text"
-          name="name"
           id="name"
-          onChange={(e) => setName(e.currentTarget.value)}
+          {...register("userName", { required: true, minLength: 3 })}
         />
       </div>
-      {errorMessage("name")}
+      {errorMessage("userName")}
       <div className="flex flex-col gap-2">
         <label htmlFor="email">Email Address</label>
         <input
           className={`${inputStyles} p-3 text-lg text-white`}
           type="email"
-          name="email"
           id="email"
-          onChange={(e) => setEmail(e.currentTarget.value)}
+          {...register("email", {
+            required: true,
+            pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+          })}
         />
       </div>
       {errorMessage("email")}
@@ -155,12 +211,14 @@ const Form = ({ validForm, setFormFields, formErrors }: FormProps) => {
         <input
           className={`${inputStyles} p-3 text-lg`}
           type="text"
-          name="git-user"
           id="git-user"
-          onChange={(e) => setGitHubUser(e.currentTarget.value)}
+          {...register("gitHubUserName", {
+            required: true,
+            pattern: /^@.*/,
+          })}
         />
       </div>
-      {errorMessage("gitUser")}
+      {errorMessage("gitHubUserName")}
 
       <button
         type="submit"
