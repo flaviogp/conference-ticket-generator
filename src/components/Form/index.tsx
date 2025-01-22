@@ -30,6 +30,7 @@ const Form = ({ setFormIsValid, setFormFields }: FormProps) => {
   } = useForm<FormFieldsType>();
 
   const [userImage, setUserImage] = useState<UserImageType | null>(null);
+  const [userImageError, setUserImageError] = useState<string | null>(null);
 
   const inputStyles = `rounded-xl border border-neutral-500 bg-neutral-300/10 hover:bg-neutral-300/20 text-nneutral-0`;
 
@@ -38,9 +39,13 @@ const Form = ({ setFormIsValid, setFormFields }: FormProps) => {
     onDragLeave: (e: React.DragEvent) => e.preventDefault(),
     onDragOver: (e: React.DragEvent) => e.preventDefault(),
     onDrop: (e: React.DragEvent) => {
+      setUserImageError(null);
       e.preventDefault();
       const file = Array.from(e.dataTransfer.files);
-      if (file.length !== 1) throw new Error("Insira apenas uma imagem");
+      if (file.length !== 1) {
+        setUserImageError("Insert only one image!");
+        throw new Error("Insert only one image!");
+      }
       const { name, size } = file[0];
       const reader = new FileReader();
       reader.readAsDataURL(file[0]);
@@ -94,9 +99,15 @@ const Form = ({ setFormIsValid, setFormFields }: FormProps) => {
           );
         }
         break;
+      case "avatar":
+        if (errors.gitHubUserName?.type === "required") {
+          return <ErrorMessageElement message="user image is required!" />;
+        }
+        if (userImageError !== null) {
+          return <ErrorMessageElement message={userImageError} />;
+        }
+        break;
     }
-
-    // return <ErrorMessageElement message="se" />;
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,7 +156,7 @@ const Form = ({ setFormIsValid, setFormFields }: FormProps) => {
               </div>
               <span>Drag and drop or click to upload</span>
             </label>
-            {/* {errorMessage("avatar")} */}
+            {errorMessage("avatar")}
           </div>
         ) : (
           <div className={`${inputStyles} border-dashed`} {...dragEvents}>
