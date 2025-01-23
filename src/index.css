@@ -9,7 +9,7 @@
     width: 100%;
     height: 100vh;
     font-family: "Inconsolata", serif;
-    background-image: url(./assets/images/background-mobile.png);
+    background-image: url(/images/background-mobile.png);
     background-position: top;
     background-repeat: no-repeat;
     background-size: cover;

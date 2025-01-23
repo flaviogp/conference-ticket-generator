@@ -1,6 +1,6 @@
-import PaternTicket from "../../assets/images/pattern-ticket.svg";
-import Logo from "../../assets/images/logo-mark.svg";
-import GitIcon from "../../assets/images/icon-github.svg";
+import PaternTicket from "/images/pattern-ticket.svg";
+import Logo from "/images/logo-mark.svg";
+import GitIcon from "/images/icon-github.svg";
 import { FormFieldsType } from "../../types";
 
 interface TicketPreviewProps {
@@ -9,28 +9,41 @@ interface TicketPreviewProps {
 
 const TicketPreview = ({ formFields }: TicketPreviewProps) => {
   return (
-    <div className="relative mt-20 flex h-[240px] max-w-[600px] flex-col justify-between p-5">
-      <img src={PaternTicket} alt="Ticket" className="absolute left-0 top-0" />
-      <div className="flex items-start gap-4">
-        <img src={Logo} alt="Logo" />
-        <div className="flex flex-col gap-2">
-          <p className="text-3xl font-bold">Coding Conf</p>
-          <span>Jan 31, 2025 / Austin, TX</span>
+    <div
+      className={`relative mt-20 flex h-[152px] w-[330px] flex-col justify-between p-3 sm:h-[260px] sm:w-full sm:p-6`}
+    >
+      <img
+        src={PaternTicket}
+        alt="Ticket"
+        className="absolute right-0 top-0 h-full w-full"
+      />
+
+      <div className="flex w-[85%] gap-2 sm:gap-4">
+        <img src={Logo} alt="Logo" className="" />
+        <div className="flex flex-col">
+          <p className="text-md font-bold sm:text-4xl">Coding Conf</p>
+          <span className="text-xs font-bold sm:text-lg">
+            Jan 31, 2025 / Austin, TX
+          </span>
         </div>
       </div>
-      <div className="flex gap-4">
-        <div className="max-h-16 w-auto">
+      <div className="flex w-[85%] gap-4">
+        <div className="max-w-16">
           <img src={formFields?.avatar} alt="user" className="h-full w-full" />
         </div>
-        <div className="max-h-16 w-[350px]">
-          <p className="text-3xl font-bold">{formFields?.userName}</p>
+        <div className="max-h-16">
+          <p className="text-md font-bold sm:text-3xl">
+            {formFields?.userName}
+          </p>
           <div className="flex gap-2">
             <img src={GitIcon} alt="github icon" />
-            <span>{formFields?.gitHubUserName}</span>
+            <span className="text-sm sm:text-lg">
+              {formFields?.gitHubUserName}
+            </span>
           </div>
         </div>
       </div>
-      <div className="absolute right-0 top-[40%] rotate-90">
+      <div className="absolute right-[-25px] top-[40%] rotate-90 sm:right-0">
         <span className="text-4xl font-bold text-neutral-500">#01609</span>
       </div>
     </div>

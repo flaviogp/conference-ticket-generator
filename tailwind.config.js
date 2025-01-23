@@ -13,6 +13,9 @@ module.exports = {
         "orange-500": "hsl(7, 88%, 67%)",
         "orange-700": "hsl(7, 71%, 60%)",
         "gradient-text": "hsl(7, 86%, 67%) to hsl(0, 0%, 100%)",
+      },
+      backgroundImage: {
+        'pattern-ticket': "url(images/pattern-ticket.svg)"
       }
     },
   },

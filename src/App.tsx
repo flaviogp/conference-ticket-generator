@@ -8,7 +8,7 @@ function App() {
   const [formIsValid, setFormIsValid] = useState(false);
   const [formFields, setFormFields] = useState<FormFieldsType>();
   return (
-    <div className="flex max-w-[600px] flex-col items-center text-neutral-0">
+    <div className="flex min-w-[370px] max-w-[600px] flex-col items-center text-neutral-0">
       <Header />
       {!formIsValid ? (
         <div className="px-5">

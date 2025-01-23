@@ -1,5 +1,5 @@
 import { useState } from "react";
-import UploadIcon from "../../assets/images/icon-upload.svg";
+import UploadIcon from "../../../public/images/icon-upload.svg";
 import { useForm } from "react-hook-form";
 import { FormFieldsType } from "../../types";
 
@@ -171,7 +171,7 @@ const Form = ({ setFormIsValid, setFormFields }: FormProps) => {
               <div className="flex w-full justify-center gap-4">
                 <button
                   onClick={handleRemoveUserImage}
-                  className="rounded-xl bg-neutral-500/30 px-4 py-2 text-neutral-0 [&>*]:hover:underline"
+                  className="rounded-xl bg-neutral-500/30 px-2 py-2 text-neutral-0 [&>*]:hover:underline"
                 >
                   <span>Remove Image</span>
                 </button>
